@@ -1,6 +1,6 @@
 ---
 title: {title}
-tags: [{tags}]
+categories: [{categories}]
 published: {published}
 ---
 

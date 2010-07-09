@@ -90,14 +90,14 @@ class JekyllExport extends Plugin
                 .$post->pubdate->text_format('{Y}-{m}-{d}')
                 ."-$post->slug.markdown";
 
-            $title     = $post->title;
-            $tags      = implode(', ', $post->tags);
-            $published = $post->status === Post::status('published') ? 'true' : 'false';
-            $content   = trim($post->content);
+            $title      = $post->title;
+            $categories = implode(', ', $post->tags);
+            $published  = $post->status === Post::status('published') ? 'true' : 'false';
+            $content    = trim($post->content);
 
             $data = str_replace(
-                array('{title}', '{tags}', '{published}', '{content}'),
-                array($title, $tags, $published, $content),
+                array('{title}', '{categories}', '{published}', '{content}'),
+                array($title, $categories, $published, $content),
                 file_get_contents($this->template)
             );
 
