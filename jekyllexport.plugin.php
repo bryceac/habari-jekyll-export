@@ -87,7 +87,7 @@ class JekyllExport extends Plugin
         foreach (Posts::get(array('content_type' => 'entry', 'nolimit' => TRUE)) as $post)
         {
             $filename = "$this->export_dir/"
-                .$post->pubdate->text_format('{Y}-{m}-{d}_{H}-{i}')
+                .$post->pubdate->text_format('{Y}-{m}-{d}')
                 ."-$post->slug.markdown";
 
             $title     = $post->title;
