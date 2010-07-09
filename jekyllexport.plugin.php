@@ -34,6 +34,7 @@ class JekyllExport extends Plugin
     {
         if ( $plugin_id == $this->plugin_id() ) {
             $actions[] = _t( 'Export Posts' );
+            $actions[] = _t( 'Generate Rewrite Rules' );
         }
 
         return $actions;
@@ -58,10 +59,16 @@ class JekyllExport extends Plugin
 
                     printf('<p>%s</p>', $message);
                     break;
+                case _t( 'Generate Rewrite Rules' ):
+                    printf('<pre>%s</pre>', $this->rewrite_rules());
+                    break;
             }
         }
     }
 
+    /**
+     * Sets class variables and checks permissions.
+     */
     public function action_init()
     {
         $this->export_dir = dirname(__FILE__).'/_posts';
@@ -82,6 +89,9 @@ class JekyllExport extends Plugin
         }
     }
 
+    /**
+     * Exports Habari posts to Jekyll post Markdown files.
+     */
     private function export_posts()
     {
         foreach (Posts::get(array('content_type' => 'entry', 'nolimit' => TRUE)) as $post)
@@ -108,6 +118,30 @@ class JekyllExport extends Plugin
         }
 
         return TRUE;
+    }
+
+    /**
+     * Generates a list of 301 redirects, using the default Jekyll permalink style.
+     *
+     * @return string
+     */
+    private function rewrite_rules()
+    {
+        $out = array();
+
+        foreach (Posts::get(array('content_type' => 'entry', 'nolimit' => TRUE)) as $post)
+        {
+            $out[] = sprintf('Redirect 301 /%s %s%s/%s/%s/%s.html',
+                $post->slug,
+                URL::get('display_home'),
+                $post->pubdate->text_format('{Y}'),
+                $post->pubdate->text_format('{m}'),
+                $post->pubdate->text_format('{d}'),
+                $post->slug
+            );
+        }
+
+        return implode("\n", $out);
     }
 
     /**
