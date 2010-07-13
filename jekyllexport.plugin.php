@@ -60,7 +60,7 @@ class JekyllExport extends Plugin
                     printf('<p>%s</p>', $message);
                     break;
                 case _t( 'Generate Rewrite Rules' ):
-                    printf('<pre>%s</pre>', $this->rewrite_rules());
+                    printf('<code>%s</code>', $this->rewrite_rules());
                     break;
             }
         }
@@ -71,6 +71,8 @@ class JekyllExport extends Plugin
      */
     public function action_init()
     {
+        Stack::add('admin_stylesheet', 'code { display:block;font-family:monospace;margin:3em 0 2em; }');
+
         $this->export_dir = dirname(__FILE__).'/_posts';
         $this->template   = dirname(__FILE__).'/template.php';
 
@@ -129,6 +131,17 @@ class JekyllExport extends Plugin
     {
         $out = array();
 
+        $out[] = '# Redirect Habari pages.';
+        foreach (Posts::get(array('content_type' => 'page', 'nolimit' => TRUE)) as $page)
+        {
+            $out[] = sprintf('Redirect 301 /%s %s%s.html',
+                $page->slug,
+                URL::get('display_home'),
+                $page->slug
+            );
+        }
+
+        $out[] = "<br># Redirect Habari entries.";
         foreach (Posts::get(array('content_type' => 'entry', 'nolimit' => TRUE)) as $post)
         {
             $out[] = sprintf('Redirect 301 /%s %s%s/%s/%s/%s.html',
@@ -141,7 +154,7 @@ class JekyllExport extends Plugin
             );
         }
 
-        return implode("\n", $out);
+        return implode('<br>', $out);
     }
 
     /**
