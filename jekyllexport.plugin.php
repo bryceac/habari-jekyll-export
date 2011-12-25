@@ -2,7 +2,7 @@
 
 class JekyllExport extends Plugin
 {
-    const VERSION = '0.2';
+    const VERSION = '0.3';
 
     protected $export_dir = NULL;
     protected $template   = NULL;
