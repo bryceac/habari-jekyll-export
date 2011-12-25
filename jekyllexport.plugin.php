@@ -2,26 +2,10 @@
 
 class JekyllExport extends Plugin
 {
-    const VERSION = '0.1';
+    const VERSION = '0.2';
 
     protected $export_dir = NULL;
     protected $template   = NULL;
-
-    /**
-     * Provide plugin info to the system.
-     */
-    public function info()
-    {
-        return array(
-            'name'        => 'Jekyll Export',
-            'version'     => self::VERSION,
-            'url'         => 'http://github.com/ahutchings/habari-jekyll-export',
-            'author'      => 'Andrew Hutchings',
-            'authorurl'   => 'http://www.andrewhutchings.com/',
-            'license'     => 'Apache License 2.0',
-            'description' => 'Exports Habari posts as static files for Jekyll.'
-        );
-    }
 
     /**
      * Executes when the admin plugins page wants to know if plugins have configuration links to display.
@@ -66,29 +50,49 @@ class JekyllExport extends Plugin
         }
     }
 
-    /**
-     * Sets class variables and checks permissions.
-     */
     public function action_init()
     {
-        Stack::add('admin_stylesheet', 'code { display:block;font-family:monospace;margin:3em 0 2em; }');
+        Stack::add('admin_stylesheet', array('code { display:block;font-family:monospace;margin:3em 0 2em; }', 'screen'));
+        $this->set_paths();
+    }
 
+    private function set_paths()
+    {
         $this->export_dir = dirname(__FILE__).'/_posts';
         $this->template   = dirname(__FILE__).'/template.php';
+    }
 
-        if ( !$this->check_permissions() )
-        {
-            Session::error( _t( 'Jekyll Export activation failed. Either the _posts directory does not exist or it is not writable by the web server.' ) );
-            Plugins::deactivate_plugin( __FILE__ );
-            Utils::redirect();
+    /**
+     * Prevents plugin activation if the permission check fails or if the
+     * Jekyll template has not been created.
+     * @param  boolean $ok   True if the plugin can be activated
+     * @param  string  $file Plugin file
+     * @return boolean
+     */
+    public function filter_activate_plugin( $ok, $file )
+    {
+        if ( Plugins::id_from_file($file) == Plugins::id_from_file(__FILE__) ) {
+
+            $this->set_paths();
+
+            if ( !$this->check_permissions() )
+            {
+                $message = _t( 'Jekyll Export activation failed. Either the _posts directory does not exist or it is not writable by the web server.' );
+                EventLog::log( $message );
+                Session::error( $message );
+                $ok = FALSE;
+            }
+
+            if ( !$this->check_template() )
+            {
+                $message = _t( 'Jekyll Export activation failed. Either template.php does not exist or it is not readable by the web server.' );
+                EventLog::log( $message );
+                Session::error( $message );
+                $ok = FALSE;
+            }
         }
 
-        if ( !$this->check_template() )
-        {
-            Session::error( _t( 'Jekyll Export activation failed. Either template.php does not exist or it is not readable by the web server.' ) );
-            Plugins::deactivate_plugin( __FILE__ );
-            Utils::redirect();
-        }
+        return $ok;
     }
 
     /**
@@ -103,9 +107,14 @@ class JekyllExport extends Plugin
                 ."-$post->slug.markdown";
 
             $title      = json_encode($post->title);
-            $categories = implode(', ', $post->tags);
             $published  = $post->status === Post::status('published') ? 'true' : 'false';
             $content    = trim($post->content);
+
+            $categories = array();
+            foreach($post->tags as $tag) {
+                $categories[] = $tag->term;
+            }
+            $categories = implode(', ', $categories);
 
             $data = str_replace(
                 array('{title}', '{categories}', '{published}', '{content}'),
