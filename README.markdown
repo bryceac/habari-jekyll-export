@@ -4,7 +4,8 @@ This plugin exports Habari posts as static files for Jekyll.
 
 ## Requirements
 
-* Habari = 0.6.x
+* Habari = 0.6.x (*version 0.4 tested against 0.9.2*)
+
 
 ## Installation
 
