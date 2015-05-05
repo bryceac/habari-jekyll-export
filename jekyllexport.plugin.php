@@ -2,7 +2,7 @@
 
 class JekyllExport extends Plugin
 {
-    const VERSION = '0.3';
+    const VERSION = '0.4';
 
     protected $export_dir = NULL;
     protected $template   = NULL;
@@ -106,19 +106,21 @@ class JekyllExport extends Plugin
                 .$post->pubdate->text_format('{Y}-{m}-{d}')
                 ."-$post->slug.markdown";
 
-            $title      = json_encode($post->title);
+            $permalink  = $post->slug;
             $published  = $post->status === Post::status('published') ? 'true' : 'false';
+            $title      = json_encode($post->title);
+            $date       = $post->pubdate->text_format('{Y}-{m}-{d}');
             $content    = trim($post->content);
 
-            $categories = array();
+            $jtags = array();
             foreach($post->tags as $tag) {
-                $categories[] = $tag->term;
+                $jtags[] = $tag->term;
             }
-            $categories = implode(', ', $categories);
+            $jtags = implode(' ', $jtags);
 
             $data = str_replace(
-                array('{title}', '{categories}', '{published}', '{content}'),
-                array($title, $categories, $published, $content),
+                array('{permalink}', '{published}', '{title}', '{date}', '{content}', '{jtags}'),
+                array($permalink, $published, $title, $date, $content, $jtags),
                 file_get_contents($this->template)
             );
 
@@ -188,4 +190,3 @@ class JekyllExport extends Plugin
 }
 
 ?>
-
