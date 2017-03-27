@@ -1,6 +1,6 @@
 # Pelican Export for Habari
 
-This plugin exports Habari posts as static files for Pelican, and is a slightly modified version of the Jekyll export plugin.
+This plugin exports Habari posts as static files for Pelican, and is a slightly modified version of the [Jekyll export plugin](http://github.com/ahutchings/habari-jekyll-export) by Andrew Hutchings.
 
 ## Requirements
 
