@@ -107,7 +107,7 @@ class JekyllExport extends Plugin
 
             $permalink  = $post->slug;
             $published  = $post->status === Post::status('published') ? 'true' : 'false';
-            $title      = $post->title;
+            $title      = htmlentities($post->title);
             $date       = $post->pubdate->text_format('{Y}-{m}-{d}');
             $content    = trim($post->content);
 
