@@ -1,6 +1,6 @@
 # Jekyll Export for Habari
 
-This plugin exports Habari posts as static files for Jekyll.
+This plugin exports Habari posts as static files for Pelican, and is a slightly modified version of the Jekyll export plugin.
 
 ## Requirements
 
@@ -13,9 +13,9 @@ Step 1: Download this plugin.
 
 To get it from git execute the following command in the `user/plugins` directory:
 
-	$ git clone git://github.com/ahutchings/habari-jekyll-export.git jekyll-export
+	$ git clone git://github.com/bryceac/habari-pelican-export.git jekyll-export
 
-Of course you can always download the code from the [GitHub project](http://github.com/ahutchings/habari-jekyll-export) as an archive.
+Of course you can always download the code from the [GitHub project](http://github.com/bryceac/habari-pelican-export) as an archive.
 
 Step 1: Make the `_posts` directory writable by your web server.
 
