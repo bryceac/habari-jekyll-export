@@ -4,7 +4,7 @@ This plugin exports Habari posts as static files for Pelican, and is a slightly 
 
 ## Requirements
 
-* Habari = 0.6.x (*version 0.4 tested against 0.9.2*)
+* Habari = 0.6 (*based on version 0.4 of the Jekyll export plugin, so should work in 0.9.x series. *)
 
 
 ## Installation
