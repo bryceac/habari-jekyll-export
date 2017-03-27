@@ -1,4 +1,4 @@
-# Jekyll Export for Habari
+# Pelican Export for Habari
 
 This plugin exports Habari posts as static files for Pelican, and is a slightly modified version of the Jekyll export plugin.
 
