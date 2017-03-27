@@ -96,19 +96,18 @@ class JekyllExport extends Plugin
     }
 
     /**
-     * Exports Habari posts to Jekyll post Markdown files.
+     * Exports Habari posts to Pelican article HTML files.
      */
     private function export_posts()
     {
         foreach (Posts::get(array('content_type' => 'entry', 'nolimit' => TRUE)) as $post)
         {
             $filename = "$this->export_dir/"
-                .$post->pubdate->text_format('{Y}-{m}-{d}')
-                ."-$post->slug.markdown";
+                ."-$post->slug.html";
 
             $permalink  = $post->slug;
             $published  = $post->status === Post::status('published') ? 'true' : 'false';
-            $title      = json_encode($post->title);
+            $title      = $post->title;
             $date       = $post->pubdate->text_format('{Y}-{m}-{d}');
             $content    = trim($post->content);
 
@@ -116,7 +115,7 @@ class JekyllExport extends Plugin
             foreach($post->tags as $tag) {
                 $jtags[] = $tag->term;
             }
-            $jtags = implode(' ', $jtags);
+            $jtags = implode(', ', $jtags);
 
             $data = str_replace(
                 array('{permalink}', '{published}', '{title}', '{date}', '{content}', '{jtags}'),
