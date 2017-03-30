@@ -77,7 +77,7 @@ class JekyllExport extends Plugin
 
             if ( !$this->check_permissions() )
             {
-                $message = _t( 'Jekyll Export activation failed. Either the _posts directory does not exist or it is not writable by the web server.' );
+                $message = _t( 'Pelican Export activation failed. Either the _posts directory does not exist or it is not writable by the web server.' );
                 EventLog::log( $message );
                 Session::error( $message );
                 $ok = FALSE;
@@ -85,7 +85,7 @@ class JekyllExport extends Plugin
 
             if ( !$this->check_template() )
             {
-                $message = _t( 'Jekyll Export activation failed. Either template.php does not exist or it is not readable by the web server.' );
+                $message = _t( 'Pelican Export activation failed. Either template.php does not exist or it is not readable by the web server.' );
                 EventLog::log( $message );
                 Session::error( $message );
                 $ok = FALSE;
@@ -103,7 +103,7 @@ class JekyllExport extends Plugin
         foreach (Posts::get(array('content_type' => 'entry', 'nolimit' => TRUE)) as $post)
         {
             $filename = "$this->export_dir/"
-                ."-$post->slug.html";
+                ."$post->slug.html";
 
             $permalink  = $post->slug;
             $published  = $post->status === Post::status('published') ? 'true' : 'false';
